@@ -33,7 +33,7 @@ export default function Header() {
 
       {user && <span>{user.name}</span>}
       <span className="mx-2">|</span>
-      QA Manager
+      {user && <span>{user.email}</span>}
       <span className="mx-2">|</span>
       <button onClick={logout}>Logout</button>
 

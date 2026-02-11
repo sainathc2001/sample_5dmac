@@ -6,7 +6,7 @@ import { DocumentType } from "@/app/page";
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSave: (doc: DocumentType) => void;
+  onSave: (doc: Omit<DocumentType, "id"> & { id?: number }) => void;
   initialData?: DocumentType | null;
 }
 
@@ -16,39 +16,47 @@ export default function DocumentFormModal({
   onSave,
   initialData,
 }: Props) {
-  const [form, setForm] = useState<DocumentType>({
-    id: "",
+  const [form, setForm] = useState<Omit<DocumentType, "id">>({
     title: "",
-    version: "",
+    version: "1.0",
     status: "Draft",
     owner: "",
-    date: "",
+    effective_date: "",
   });
 
   useEffect(() => {
     if (initialData) {
-      setForm(initialData);
+      setForm({
+        title: initialData.title,
+        version: initialData.version,
+        status: initialData.status,
+        owner: initialData.owner,
+        effective_date: initialData.effective_date,
+      });
     } else {
       setForm({
-        id: `DOC-${Math.floor(Math.random() * 100000)}`,
         title: "",
-        version: "",
+        version: "1.0",
         status: "Draft",
         owner: "",
-        date: "",
+        effective_date: "",
       });
     }
   }, [initialData, open]);
 
   if (!open) return null;
 
-  const update = (key: keyof DocumentType, value: string) =>
+  const update = (key: keyof typeof form, value: string) => {
     setForm({ ...form, [key]: value });
+  };
 
   const save = () => {
-    if (!form.title || !form.owner || !form.date) return;
-    onSave(form);
-    onClose();
+    if (!form.title || !form.owner || !form.effective_date) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    onSave(initialData ? { id: initialData.id, ...form } : form);
   };
 
   return (
@@ -78,9 +86,9 @@ export default function DocumentFormModal({
             value={form.status}
             onChange={(e) => update("status", e.target.value)}
           >
-            <option>Draft</option>
-            <option>Submitted</option>
-            <option>Approved</option>
+            <option value="Draft">Draft</option>
+            <option value="Submitted">Submitted</option>
+            <option value="Approved">Approved</option>
           </select>
 
           <input
@@ -93,8 +101,8 @@ export default function DocumentFormModal({
           <input
             type="date"
             className="border w-full px-3 py-2 rounded"
-            value={form.date}
-            onChange={(e) => update("date", e.target.value)}
+            value={form.effective_date}
+            onChange={(e) => update("effective_date", e.target.value)}
           />
         </div>
 
