@@ -50,7 +50,7 @@ const fetchDocuments = async () => {
     const data = await res.json();
 
     const formatted = data.map((d: any) => ({
-      id: d.document_id,
+      id: d.id,
       title: d.title,
       version: d.version,
       status: d.status,
@@ -107,7 +107,7 @@ const saveDocument = async (
 
     const body = editing
       ? {
-          document_id: editing.id,
+          id: editing.id,
           ...doc,
         }
       : doc;

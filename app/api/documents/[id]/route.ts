@@ -3,14 +3,14 @@ import pool from "@/lib/db";
 
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
   try {
-    const document_id = Number(params.id);
-    if (!document_id) {
+    const id = Number(params.id);
+    if (!id) {
       return NextResponse.json({ error: "Document ID required" }, { status: 400 });
     }
 
     const result = await pool.query(
-      "DELETE FROM documents WHERE document_id = $1 RETURNING *",
-      [document_id]
+      "DELETE FROM documents WHERE id = $1 RETURNING *",
+      [id]
     );
 
     if (result.rowCount === 0) {

@@ -5,7 +5,7 @@ import pool from "@/lib/db";
 export async function GET() {
   try {
     const result = await pool.query(
-      "SELECT * FROM documents ORDER BY document_id DESC"
+      "SELECT * FROM documents ORDER BY id DESC"
     );
     return NextResponse.json(result.rows);
   } catch (err) {
@@ -47,9 +47,9 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const body = await req.json();
-    const { document_id, title, version, status, owner, effective_date } = body;
+    const { id, title, version, status, owner, effective_date } = body;
 
-    if (!document_id) {
+    if (!id) {
       return NextResponse.json(
         { error: "Document ID required" },
         { status: 400 }
@@ -59,9 +59,9 @@ export async function PUT(req: Request) {
     const result = await pool.query(
       `UPDATE documents
        SET title=$1, version=$2, status=$3, owner=$4, effective_date=$5
-       WHERE document_id=$6
+       WHERE id=$6
        RETURNING *`,
-      [title, version, status, owner, effective_date, document_id]
+      [title, version, status, owner, effective_date, id]
     );
 
     return NextResponse.json(result.rows[0]);
@@ -71,20 +71,3 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 }
-
-// export async function DELETE(req: Request) {
-//   try {
-//     const body = await req.json();
-//     const { document_id } = body; 
-    
-//     const result = await pool.query(
-//       "DELETE FROM documents WHERE document_id=$1 RETURNING *",
-//       [document_id]
-//     );
-
-//     return NextResponse.json(result.rows[0]);
-//   } catch (err) {
-//     console.error("DELETE ERROR:", err);
-//     return NextResponse.json({ error: "Delete failed" }, { status: 500 });
-//   }
-// }
