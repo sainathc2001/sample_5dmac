@@ -71,3 +71,20 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 }
+
+// export async function DELETE(req: Request) {
+//   try {
+//     const body = await req.json();
+//     const { document_id } = body; 
+    
+//     const result = await pool.query(
+//       "DELETE FROM documents WHERE document_id=$1 RETURNING *",
+//       [document_id]
+//     );
+
+//     return NextResponse.json(result.rows[0]);
+//   } catch (err) {
+//     console.error("DELETE ERROR:", err);
+//     return NextResponse.json({ error: "Delete failed" }, { status: 500 });
+//   }
+// }
