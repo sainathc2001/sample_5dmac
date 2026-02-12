@@ -1,3 +1,7 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   House,
   FileText,
@@ -10,18 +14,18 @@ import {
 } from "lucide-react";
 
 const menu = [
-  { label: "Dashboard", icon: House },
-  { label: "Documents", icon: FileText },
-  { label: "Deviations", icon: SquareSlash },
-  { label: "CAPA", icon: SquareCheck },
-  { label: "Change Control", icon: NotebookText },
-  { label: "Training", icon: GraduationCap },
-  { label: "Audit Trail", icon: History },
-  { label: "Admin", icon: Settings },
+  { label: "Dashboard", icon: House, href: "/dashboard" },
+  { label: "Documents", icon: FileText, href: "/documents" },
+  { label: "Deviations", icon: SquareSlash, href: "/deviations" },
+  { label: "CAPA", icon: SquareCheck, href: "/capa" },
+  { label: "Change Control", icon: NotebookText, href: "/change-control" },
+  { label: "Training", icon: GraduationCap, href: "/training" },
+  { label: "Audit Trail", icon: History, href: "/audit-trail" },
+  { label: "Admin", icon: Settings, href: "/admin" },
 ];
 
 export default function Sidebar() {
-  const active = "Documents"; // later: derive from route
+  const pathname = usePathname();
 
   return (
     <aside className="w-64 bg-gradient-to-b from-blue-900 to-blue-800 text-white">
@@ -30,18 +34,19 @@ export default function Sidebar() {
       </div>
 
       <nav className="mt-4 space-y-1 px-3 text-sm">
-        {menu.map(({ label, icon: Icon }) => (
-          <div
+        {menu.map(({ label, icon: Icon, href }) => (
+          <Link
             key={label}
-            className={`flex items-center gap-3 px-4 py-2 rounded cursor-pointer ${
-              label === active
+            href={href}
+            className={`flex items-center gap-3 px-4 py-2 rounded cursor-pointer transition-colors ${
+              pathname === href || pathname.startsWith(href + "/")
                 ? "bg-blue-700"
                 : "hover:bg-blue-700/60"
             }`}
           >
             <Icon size={18} />
             <span>{label}</span>
-          </div>
+          </Link>
         ))}
       </nav>
     </aside>
