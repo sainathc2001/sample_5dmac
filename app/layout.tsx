@@ -1,8 +1,10 @@
 import "./globals.css";
 import { initializeDatabase } from "@/lib/initDb";
 
-// Initialize database on app start
-initializeDatabase().catch(console.error);
+// Initialize database on app start (silently fail if not available)
+initializeDatabase().catch(() => {
+  console.warn("⚠️  Database initialization failed. Please ensure PostgreSQL is running on localhost:5432");
+});
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
