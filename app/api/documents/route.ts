@@ -9,47 +9,82 @@ export async function GET() {
     );
     return NextResponse.json(result.rows);
   } catch (err) {
+    console.error("GET ERROR:", err);
     return NextResponse.json({ error: "Fetch failed" }, { status: 500 });
   }
 }
 
 /* CREATE */
 export async function POST(req: Request) {
-  const body = await req.json();
-
-  const { title, version, status, owner, effective_date } = body;
-
   try {
+    const body = await req.json();
+    const { title, version, status, owner, effective_date } = body;
+
+    if (!title || !version || !status || !owner || !effective_date) {
+      return NextResponse.json(
+        { error: "All fields required" },
+        { status: 400 }
+      );
+    }
+
     const result = await pool.query(
       `INSERT INTO documents
-       (title,version,status,owner,effective_date)
-       VALUES ($1,$2,$3,$4,$5)
+       (title, version, status, owner, effective_date)
+       VALUES ($1, $2, $3, $4, $5)
        RETURNING *`,
       [title, version, status, owner, effective_date]
     );
 
-    return NextResponse.json(result.rows[0]);
-  } catch {
+    return NextResponse.json(result.rows[0], { status: 201 });
+
+  } catch (err) {
+    console.error("POST ERROR:", err);
     return NextResponse.json({ error: "Insert failed" }, { status: 500 });
   }
 }
 
 /* UPDATE */
 export async function PUT(req: Request) {
-  const body = await req.json();
-
-  const { document_id, title, version, status, owner, effective_date } = body;
-
   try {
-    await pool.query(
+    const body = await req.json();
+    const { document_id, title, version, status, owner, effective_date } = body;
+
+    if (!document_id) {
+      return NextResponse.json(
+        { error: "Document ID required" },
+        { status: 400 }
+      );
+    }
+
+    const result = await pool.query(
       `UPDATE documents
        SET title=$1, version=$2, status=$3, owner=$4, effective_date=$5
-       WHERE document_id=$6`,
+       WHERE document_id=$6
+       RETURNING *`,
       [title, version, status, owner, effective_date, document_id]
     );
 
-    return NextResponse.json({ success: true });
-  } catch {
+    return NextResponse.json(result.rows[0]);
+
+  } catch (err) {
+    console.error("PUT ERROR:", err);
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 }
+
+// export async function DELETE(req: Request) {
+//   try {
+//     const body = await req.json();
+//     const { document_id } = body; 
+    
+//     const result = await pool.query(
+//       "DELETE FROM documents WHERE document_id=$1 RETURNING *",
+//       [document_id]
+//     );
+
+//     return NextResponse.json(result.rows[0]);
+//   } catch (err) {
+//     console.error("DELETE ERROR:", err);
+//     return NextResponse.json({ error: "Delete failed" }, { status: 500 });
+//   }
+// }

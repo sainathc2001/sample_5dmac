@@ -7,9 +7,11 @@ import StatusPill from "./StatusPill";
 export default function DocumentsTable({
   data,
   onEdit,
+  onDelete,
 }: {
   data: DocumentType[];
   onEdit: (doc: DocumentType) => void;
+  onDelete?: (id: number) => void;
 }) {
   const router = useRouter();
   
@@ -48,7 +50,7 @@ export default function DocumentsTable({
                 <StatusPill status={doc.status} />
               </td>
               <td className="px-4 py-3">{doc.owner}</td>
-              <td className="px-4 py-3">{doc.date}</td>
+              <td className="px-4 py-3">{doc.effective_date}</td>
 
               {/* ACTIONS */}
               <td className="px-4 py-3 flex gap-2">
@@ -69,6 +71,13 @@ export default function DocumentsTable({
                 >
                   ✏️
                 </button>
+                {/* <button
+                    onClick={() => onDelete && onDelete(doc.id)}
+                    className="border px-2 py-1 rounded hover:bg-red-100 text-red-600"
+                    title="Delete"
+                  >
+                    🗑️
+                  </button> */}
               </td>
             </tr>
           ))}

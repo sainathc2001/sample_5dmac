@@ -13,3 +13,44 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
+
+
+// import "./globals.css";
+// import Sidebar from "@/components/Sidebar";
+// import Header from "@/components/Header";
+
+// export const metadata = {
+//   title: "Pharma eQMS",
+//   description: "Pharma Quality Management System",
+// };
+
+// export default function RootLayout({
+//   children,
+// }: {
+//   children: React.ReactNode;
+// }) {
+//   return (
+//     <html lang="en">
+//       <body>
+//         <div className="flex min-h-screen bg-gray-100">
+
+//           {/* Sidebar */}
+//           <Sidebar />
+
+//           {/* Right Side Layout */}
+//           <div className="flex-1 flex flex-col">
+
+//             {/* Header */}
+//             <Header />
+
+//             {/* Page Content */}
+//             <main className="flex-1 p-6">
+//               {children}
+//             </main>
+
+//           </div>
+//         </div>
+//       </body>
+//     </html>
+//   );
+// }
